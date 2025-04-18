@@ -132,7 +132,7 @@ try:
     target = timeList[0]
 
     # 4
-    c = [str(i[0]) + ':' + ('0' + str(i[1]) if i[1]<10 else str(i[1])) + " " + str(i[2]) for i in timeList] # ew ugly if statment 
+    c = [str(i[0]) + ':' + ('0' + str(i[1]) if i[1]<10 else str(i[1])) + " " + str(i[2]) for i in timeList]
 
     print(c)
 
@@ -180,7 +180,9 @@ try:
     og = []
 
     for i in sortedTres:
-        time_str = str(i).zfill(4)
+        time_str = str(i)
+        while len(time_str) < 4:
+            time_str = "0" + time_str
 
         hours = int(time_str[:2])
         minutes = int(time_str[2:])
