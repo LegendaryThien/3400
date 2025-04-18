@@ -228,7 +228,7 @@ except IndexError:
     print("Error: No input file specified")
     sys.exit(1)
 except FileNotFoundError:
-    print(f"Error: File '{input_file}' not found")
+    print(f"Error: File '{sys.argv[1]}' not found")
     sys.exit(1)
 except EmptyFile as e:
     print(f"Error: {str(e)}")
