@@ -8,7 +8,14 @@ class ImproperTime(Exception):
 
 def create_TimeList(inputfile):
 
+    with open(inputfile) as file:
+        lines = file.readlines()
+
+    if not lines:
+        raise EmptyFile("The file is empty")
+
     # https://stackoverflow.com/questions/51345024/read-text-file-and-parse-in-python
+    # https://learning.oreilly.com/library/view/learning-python-5th/9781449355722/ch04.html#type-specific_methods
     my_list = []
     for line in lines:             
         line = line.split(' ')
@@ -40,9 +47,6 @@ def create_TimeList(inputfile):
     return my_list
 
 def timeCompareGen(listoftuples, target):
-
-    # print(target)
-    
     thr = target[0]
     tmin = target[1]
     tpm = target[2]
@@ -52,34 +56,22 @@ def timeCompareGen(listoftuples, target):
     if tpm == "AM" and thr == 12:
         thr = 0
 
-    #print(thr)
-    #print(tmin)
-    #print(tpm)
-
     ttemp = []
     ttemp.append(thr)
     ttemp.append(tmin)
     ttemp.append(tpm)
 
-    # https://www.geeksforgeeks.org/python-convert-tuple-to-integer/
     tres=""
     for i in ttemp:
         if i != ttemp[2]:
             tres+=str(i)
     tres=int(tres)
 
-    #print(tres)
-    #print("--------------------------------")
-
-    result = []
-
     for i in listoftuples:
-        
         ghr = i[0]
         gmin = i[1]
         gpm = i[2]
    
-        
         if gpm == "PM" and ghr != 12:
             ghr = ghr + 12
         elif gpm == "AM" and ghr == 12:
@@ -99,35 +91,24 @@ def timeCompareGen(listoftuples, target):
                     gres+=str(j)
         gres=int(gres)
 
-        #print(gres)
         if gres < tres:
-            #print("add 2400 if less than")
             gres = gres + 2400
-
-        #print(gres)
-        #print(tres)
-        #print("subtract")
 
         nres = gres - tres
 
-        # print(nres)
-
-        # https://www.geeksforgeeks.org/python-split-string-into-list-of-characters/
         if nres < 1000:
             strres = '0' + str(nres)
         else:
             strres = str(nres)
         listres = list(strres)
-        # print(listres)
+        
         if len(listres) > 2:
             if int(listres[2]) > 4:
                 listres[2] = int(listres[2]) - 4
                 listres[2] = str(listres[2])
-            # print(listres)
         
-        # https://stackoverflow.com/questions/4647050/collect-every-pair-of-elements-from-a-list-into-tuples-in-python
+        
         o = [(listres[i],listres[i+1]) for i in range(0,len(listres),2)]
-        # print(o)
 
         e = []
         for t in o:
@@ -136,42 +117,42 @@ def timeCompareGen(listoftuples, target):
             combine = num1 * 10 + num2
             e.append(combine)
         
-        # print(e)
-        
-        # new
         if len(e) >= 2:
-            result.append((e[0], e[1]))
+            yield (e[0], e[1])
         else:
-            result.append((0, e[0]))
-
-        # print("--------------------------------")
-    
-    # print("result")
-    # print(result)
-
-    # print("--------------------------------")
-    return result
+            yield (0, e[0])
 
 ############ MAIN #############
 
 try:
-    with open(sys.argv[1]) as file:
-        lines = file.readlines()
+    
+    # 1 and 7
+    
+    timeList = create_TimeList(sys.argv[1])
+    target = timeList[0]
 
-    if not lines:
-        raise EmptyFile("The file is empty")
-
-    a = create_TimeList(lines)
-
-    c = [str(i[0]) + ':' + ('0' + str(i[1]) if i[1]<10 else str(i[1])) + " " + str(i[2]) for i in a] # ew ugly if statment 
+    # 4
+    c = [str(i[0]) + ':' + ('0' + str(i[1]) if i[1]<10 else str(i[1])) + " " + str(i[2]) for i in timeList] # ew ugly if statment 
 
     print(c)
 
-    # -----------------------------------------------------------
+    # 5 -----------------------------------------------------------
+    def hrtomin(t):
+        hours = t[0]
+        if t[2] == "PM" and hours != 12:
+            hours += 12
+        elif t[2] == "AM" and hours == 12:
+            hours = 0
+        return hours * 60 + t[1]
+    
+    maxtime = max(timeList, key=hrtomin)
+    print(maxtime)
+    
+    # 6 -----------------------------------------------------------
 
     unsortedTres = []
 
-    for i in a:
+    for i in timeList:
         thr = i[0]
         tmin = i[1]
         tpm = i[2]
@@ -215,14 +196,12 @@ try:
 
         og.append((hours, minutes, ampm))
 
-    print(og[len(og)-1])
     print(og)
 
-    # ---------------------------------------------------------------------
+    # 8 -----------------------------------------------------------
 
-    target = (a[0][0], a[0][1], a[0][2])
-    b = timeCompareGen(a, target)
-    print(b)
+    tdiffs = [diff for diff in timeCompareGen(timeList, target)]
+    print(tdiffs)
 
 except IndexError:
     print("Error: No input file specified")
