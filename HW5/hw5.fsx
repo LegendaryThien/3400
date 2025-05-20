@@ -31,10 +31,10 @@ let rec simplify expr =
     | Y -> Y
     | Const c -> Const c
     
+    // Double negation should be checked before single negation
+    | Neg (Neg e) -> simplify e
     // Negation involving a number
     | Neg (Const c) -> Const (-c)
-    // Double negation
-    | Neg (Neg e) -> simplify e
     // Negation of other expressions
     | Neg e -> Neg (simplify e)
 
@@ -58,6 +58,7 @@ let rec simplify expr =
     | Sub (Const a, Const b) -> Const (a - b)
     // Subtraction with zero
     | Sub (e, Const 0.0) -> simplify e
+    | Sub (Const 0.0, Neg e) -> simplify e
     | Sub (Const 0.0, e) -> Neg (simplify e)
     // Subtraction of identical terms
     | Sub (e1, e2) when e1 = e2 -> Const 0.0
@@ -68,6 +69,7 @@ let rec simplify expr =
         match (s1, s2) with
         | (Const a, Const b) -> Const (a - b)
         | (e, Const 0.0) -> e
+        | (Const 0.0, Neg e) -> e
         | (Const 0.0, e) -> Neg e
         | (e1, e2) when e1 = e2 -> Const 0.0
         | _ -> Sub (s1, s2)
