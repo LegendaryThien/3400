@@ -35,12 +35,9 @@ let rec simplify expr =
     | Neg (Const c) -> Const (-c)
     // Double negation
     | Neg (Neg e) -> simplify e
-    // General negation simplification
-    | Neg e ->
-        match simplify e with
-        | Neg inner -> simplify inner
-        | Const c -> Const (-c)
-        | result -> Neg result
+    // Negation of other expressions
+    | Neg e -> Neg (simplify e)
+
     
     // Addition involving two numbers
     | Add (Const a, Const b) -> Const (a + b)
