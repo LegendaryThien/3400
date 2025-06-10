@@ -1,39 +1,35 @@
 q0,qaccept
-# Initial state - skip start marker and move to end of input
-q0,#,q0,#,R
 q0,x,q0,x,R
-q0,y,q0,y,R
-q0,z,q0,z,R
+q0,y,q0,e,R
+q0,z,q0,y,R
 q0,B,q1,B,L
-
-# Move left to find next input symbol
-q1,x,q2,B,L
-q1,y,q1,B,L
-q1,z,q3,B,L
-q1,#,q4,#,R
-
-# Process x - write x at end of output
-q2,x,q2,x,L
-q2,y,q2,y,L
-q2,z,q2,z,L
-q2,#,q2,#,L
-q2,B,q5,x,R
-
-# Process z - write y at end of output
-q3,x,q3,x,L
-q3,y,q3,y,L
-q3,z,q3,z,L
-q3,#,q3,#,L
-q3,B,q5,y,R
-
-# Move to start of output and halt
-q4,x,q4,x,R
-q4,y,q4,y,R
-q4,z,q4,z,R
-q4,B,qaccept,B,R
-
-# Move right to end of output
+q1,x,q1,x,L
+q1,y,q1,y,L
+q1,z,q1,z,L
+q1,e,q1,e,L
+q1,B,q2,B,R
+q2,y,q2,y,R
+q2,x,q2,x,R
+q2,e,q3,e,R
+q3,e,q3,e,R
+q3,x,q4,e,L
+q3,y,q6,e,L
+q3,B,q8,B,L
+q4,y,q5,y,L
+q4,x,q5,x,L
+q4,e,q5,e,L
+q4,B,q5,B,R
 q5,x,q5,x,R
 q5,y,q5,y,R
-q5,z,q5,z,R
-q5,B,q1,B,L 
+q5,e,q1,x,L
+q6,y,q6,y,L
+q6,x,q6,x,L
+q6,e,q6,e,L
+q6,B,q7,B,R
+q7,x,q7,x,R
+q7,y,q7,y,R
+q7,e,q1,y,L
+q8,x,q8,x,L
+q8,y,q8,y,L
+q8,e,q8,B,L
+q8,B,qaccept,B,R
