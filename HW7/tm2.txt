@@ -1,0 +1,39 @@
+q0,qaccept
+# Initial state - skip start marker and move to end of input
+q0,#,q0,#,R
+q0,x,q0,x,R
+q0,y,q0,y,R
+q0,z,q0,z,R
+q0,B,q1,B,L
+
+# Move left to find next input symbol
+q1,x,q2,B,L
+q1,y,q1,B,L
+q1,z,q3,B,L
+q1,#,q4,#,R
+
+# Process x - write x at end of output
+q2,x,q2,x,L
+q2,y,q2,y,L
+q2,z,q2,z,L
+q2,#,q2,#,L
+q2,B,q5,x,R
+
+# Process z - write y at end of output
+q3,x,q3,x,L
+q3,y,q3,y,L
+q3,z,q3,z,L
+q3,#,q3,#,L
+q3,B,q5,y,R
+
+# Move to start of output and halt
+q4,x,q4,x,R
+q4,y,q4,y,R
+q4,z,q4,z,R
+q4,B,qaccept,B,R
+
+# Move right to end of output
+q5,x,q5,x,R
+q5,y,q5,y,R
+q5,z,q5,z,R
+q5,B,q1,B,L 

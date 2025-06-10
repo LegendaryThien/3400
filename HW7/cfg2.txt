@@ -1,0 +1,5 @@
+S -> A B C
+A -> x A | x
+B -> yy | D
+D -> z D | ''
+C -> x | '' 

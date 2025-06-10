@@ -1,0 +1,3 @@
+S -> g
+S -> e S h
+S -> f S h 
